@@ -1,0 +1,88 @@
+---
+# tasks file for sprylab.tomcat-ubuntu
+
+- name: Create download directory for Tomcat packages
+  file:
+     path: "{{ tomcat_ubuntu_download_dir }}"
+     state: directory
+     mode: 0755
+
+- name: Download Tomcat from Ubuntu Package archive
+  get_url:
+    url: "{{ item }}"
+    dest: "{{ tomcat_ubuntu_download_dir }}"
+  with_items:
+    - http://de.archive.ubuntu.com/ubuntu/pool/universe/t/tomcat8/tomcat8_{{ tomcat_ubuntu_version }}.deb
+    - http://de.archive.ubuntu.com/ubuntu/pool/universe/t/tomcat8/tomcat8-common_{{ tomcat_ubuntu_version }}.deb
+    - http://de.archive.ubuntu.com/ubuntu/pool/universe/t/tomcat8/libtomcat8-java_{{ tomcat_ubuntu_version }}.deb
+    - http://de.archive.ubuntu.com/ubuntu/pool/main/e/ecj/libecj-java_3.10.1-2_all.deb
+
+- name: Download Tomcat Native Library from Ubuntu Package archive
+  get_url:
+    url: "{{ item }}"
+    dest: "{{ tomcat_ubuntu_download_dir }}"
+  with_items:
+    - http://de.archive.ubuntu.com/ubuntu/pool/universe/t/tomcat-native/libtcnative-1_{{ tomcat_ubuntu_native_version }}.deb
+    - http://de.archive.ubuntu.com/ubuntu/pool/main/a/apr/libapr1_{{ tomcat_ubuntu_apache_native_version }}.deb
+  when: tomcat_ubuntu_native_install|bool
+
+# TODO: This should be replaced by the "apt" module with "deb" parameter after updating to Ansible 1.6+
+- name: Install Tomcat packages via dpkg
+  sudo: yes
+  shell: dpkg -i --skip-same-version {{ tomcat_ubuntu_download_dir }}/*.deb
+
+# see https://bugs.launchpad.net/ubuntu/+source/tomcat-native/+bug/1326255 for details
+- name: Fix Tomcat Native Library Ubuntu packaging bug
+  sudo: yes
+  file:
+    path: /usr/lib/libtcnative-1.so
+    src: /usr/lib/x86_64-linux-gnu/libtcnative-1.so
+    state: link
+  when: tomcat_ubuntu_native_install|bool
+
+- name: Update Tomcat's server.xml
+  sudo: yes
+  template:
+    src: ../templates/server.j2
+    dest: /var/lib/tomcat8/conf/server.xml
+    force: yes
+  notify:
+    - restart tomcat
+
+- name: Set Tomcat's JAVA_OPTS
+  sudo: yes
+  lineinfile:
+    dest: /etc/default/tomcat8
+    state: present
+    regexp: '^JAVA_OPTS=(.*)$'
+    line: 'JAVA_OPTS="{{ tomcat_ubuntu_java_opts }}"'
+    backrefs: yes
+  notify:
+    - restart tomcat
+
+- name: Download MySQL JBDC Driver
+  sudo: yes
+  apt:
+    name: libmysql-java
+  when: tomcat_ubuntu_mysql_jbdc_install
+
+- name: Enable MySQL JBDC Driver
+  sudo: yes
+  sudo_user: tomcat8
+  file:
+      path: /var/lib/tomcat8/lib/mysql-connector-java.jar
+      src: /usr/share/java/mysql-connector-java.jar
+      state: link
+  when: tomcat_ubuntu_mysql_jbdc_install
+  notify:
+    - restart tomcat
+
+- name: Download PostgreSQL JBDC Driver
+  sudo: yes
+  sudo_user: tomcat8
+  get_url:
+    url: http://search.maven.org/remotecontent?filepath=org/postgresql/postgresql/{{ tomcat_ubuntu_postgresql_jdbc_version }}/postgresql-{{ tomcat_ubuntu_postgresql_jdbc_version }}.jar
+    dest: /var/lib/tomcat8/lib/
+  when: tomcat_ubuntu_postgresql_jbdc_install
+  notify:
+    - restart tomcat

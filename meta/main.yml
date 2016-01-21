@@ -1,0 +1,19 @@
+---
+galaxy_info:
+  author: Roman Zimmer
+  description: Tomcat 8 - latest official .deb packages from the Ubuntu Package archive
+  company: sprylab technologies GmbH
+  license: Apache
+  min_ansible_version: 1.2
+  platforms:
+  - name: Ubuntu
+    versions:
+    - trusty
+    - utopic
+    - vivid
+    - xenial
+  categories:
+  - development
+  - system
+  - web
+dependencies: []

@@ -1,0 +1,5 @@
+# test playbook
+- hosts: all
+  roles:
+  - openjdk
+  - { role: sprylab.tomcat-ubuntu, tomcat_ubuntu_mysql_jbdc_install: yes, tomcat_ubuntu_postgresql_jbdc_install: yes }
