@@ -4,17 +4,24 @@ Ansible role: Tomcat Ubuntu
 Installs the very latest Apache Tomcat (currently 8.0.30) on Ubuntu 14.04 LTS and up by downloading the official .deb packages directly from [packages.ubuntu.com][1].
 
 Additionally, this role provides support for easily:
- * setting _JAVA_OPTS_ for Tomcat
- * installing the Tomcat Native Library
- * installing MySQL and/or PostreSQL JBDC drivers
- * defining _GlobalNamingResources_
+* setting _JAVA_OPTS_ for Tomcat
+* installing the Tomcat Native Library
+* installing MySQL and/or PostreSQL JBDC drivers
+* defining _GlobalNamingResources_
+
+Installation
+------------
+
+You can easily install this role using [Ansible Galaxy][2]:
+
+    $ ansible-galaxy install sprylab.tomcat-ubuntu
 
 Requirements
 ------------
 
 A Java Runtime is required for Tomcat to run. This role does not put a hard dependency on any JRE, though.
 
-You have to make sure Java 7 or up is installed before executing this role on a target. It's known to work perfectly with [malk.java8-oracle][2], but it's up to you to decide.
+You have to make sure Java 7 or up is installed before executing this role on a target. It's known to work perfectly with [smola.java][3], but it's up to you to decide.
 
 Role Variables
 --------------
@@ -61,7 +68,7 @@ To try it out follow these steps:
  * Install Vagrant and VirtualBox
  * Open a terminal and change to the ``examples`` directory
  * Add Ubuntu 14.04 LTS box:
-   ``vagrant box add ubuntu/trusty64 https://atlas.hashicorp.com/ubuntu/boxes/trusty64/versions/14.04/providers/virtualbox.box``
+   ``vagrant box add ubuntu/trusty64``
  * Initialize the VM:
    ``vagrant up``
  * When finished, check that Tomcat is running by looking up ``http://localhost:8080/`` in your Browser
@@ -92,4 +99,5 @@ Author Information
 By Roman Zimmer (sprylab technologies GmbH)
 
   [1]: http://packages.ubuntu.com/search?keywords=tomcat8&searchon=names&suite=xenial&section=all
-  [2]: https://galaxy.ansible.com/detail#/role/1393
+  [2]: https://galaxy.ansible.com/sprylab/tomcat-ubuntu/
+  [3]: https://galaxy.ansible.com/smola/java/
