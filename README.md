@@ -29,6 +29,7 @@ Role Variables
 * ``tomcat_ubuntu_version``: Tomcat version to install (string, default: ``8.0.30-1_all``)
 * ``tomcat_ubuntu_java_opts``: _JAVA_OPTS_ used for starting Tomcat (string, default: ``-Djava.awt.headless=true -Xmx2048m -XX:+UseConcMarkSweepGC``)
 * ``tomcat_ubuntu_global_naming_resources``: complete ``Resource`` XML tag(s) used as _GlobalNamingResource(s)_ (string, default: empty)
+* ``tomcat_ubuntu_jvm_route``: _jvmRoute_ to assign to this Tomcat installation, needed for proper load balancing configuration (use ``"{{ ansible_hostname }}"`` for the machine's hostname') (string, default: empty)
 * ``tomcat_ubuntu_download_dir``: Directory to store the downloaded .deb packages (string, default: ``/tmp/tomcat8``)
 * ``tomcat_ubuntu_native_install``: Enables or disables the installation of the Tomcat Native Library; recommended for production environments (bool, default: ``yes``)
 * ``tomcat_ubuntu_native_version``: Tomcat Native Library version to install (string, default: ``1.1.33-1_amd64``)
