@@ -4,10 +4,12 @@ Ansible role: Tomcat Ubuntu
 Installs the very latest Apache Tomcat (currently 8.0.30) on Ubuntu 14.04 LTS and up by downloading the official .deb packages directly from [packages.ubuntu.com][1].
 
 Additionally, this role provides support for easily:
+
 * setting _JAVA_OPTS_ for Tomcat
 * installing the Tomcat Native Library
 * installing MySQL and/or PostreSQL JBDC drivers
 * defining _GlobalNamingResources_
+* defining _jvmRoute_
 
 Installation
 ------------
@@ -66,12 +68,13 @@ The ```examples``` directory also gives you an impression how to use this role. 
 which quickly starts up an virtual Ubuntu 14.04 LTS box and provisions it playing the ``site.yml`` playbook.
 
 To try it out follow these steps:
- * Install Vagrant and VirtualBox
- * Open a terminal and change to the ``examples`` directory
- * Add Ubuntu 14.04 LTS box:
-   ``vagrant box add ubuntu/trusty64``
- * Initialize the VM:
-   ``vagrant up``
+
+* Install Vagrant and VirtualBox
+* Open a terminal and change to the ``examples`` directory
+* Add Ubuntu 14.04 LTS box:
+    ``vagrant box add ubuntu/trusty64``
+* Initialize the VM:
+    ``vagrant up``
  * When finished, check that Tomcat is running by looking up ``http://localhost:8080/`` in your Browser
  (Vagrant is configured to forward the port 8080 from the VM to your host).
  * Connect to the VM via SSH to check further details:
