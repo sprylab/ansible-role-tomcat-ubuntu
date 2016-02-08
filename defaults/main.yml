@@ -3,9 +3,12 @@
 
 tomcat_ubuntu_version: 8.0.30-1_all
 tomcat_ubuntu_java_opts: -Djava.awt.headless=true -Xmx2048m -XX:+UseConcMarkSweepGC
+tomcat_ubuntu_catalina_opts:
 tomcat_ubuntu_global_naming_resources:
 tomcat_ubuntu_jvm_route:
 tomcat_ubuntu_download_dir: /tmp/tomcat8
+tomcat_ubuntu_admin_install: no
+tomcat_ubuntu_user_install: no
 tomcat_ubuntu_native_install: yes
 tomcat_ubuntu_native_version: 1.1.33-1_amd64
 tomcat_ubuntu_apache_native_version: 1.5.2-3_amd64

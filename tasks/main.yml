@@ -17,6 +17,18 @@
     - http://de.archive.ubuntu.com/ubuntu/pool/universe/t/tomcat8/libtomcat8-java_{{ tomcat_ubuntu_version }}.deb
     - http://de.archive.ubuntu.com/ubuntu/pool/main/e/ecj/libecj-java_3.10.1-2_all.deb
 
+- name: Download Tomcat Admin from Ubuntu Package archive
+  get_url:
+    url: http://de.archive.ubuntu.com/ubuntu/pool/universe/t/tomcat8/tomcat8-admin_{{ tomcat_ubuntu_version }}.deb
+    dest: "{{ tomcat_ubuntu_download_dir }}"
+  when: tomcat_ubuntu_admin_install|bool
+
+- name: Download Tomcat User from Ubuntu Package archive
+  get_url:
+    url: http://de.archive.ubuntu.com/ubuntu/pool/universe/t/tomcat8/tomcat8-user_{{ tomcat_ubuntu_version }}.deb
+    dest: "{{ tomcat_ubuntu_download_dir }}"
+  when: tomcat_ubuntu_user_install|bool
+
 - name: Download Tomcat Native Library from Ubuntu Package archive
   get_url:
     url: "{{ item }}"
@@ -54,11 +66,22 @@
   lineinfile:
     dest: /etc/default/tomcat8
     state: present
-    regexp: '^JAVA_OPTS=(.*)$'
+    regexp: '^JAVA_OPTS=.*$'
     line: 'JAVA_OPTS="{{ tomcat_ubuntu_java_opts }}"'
-    backrefs: yes
   notify:
     - restart tomcat
+
+- name: Set Tomcat's CATALINA_OPTS
+  sudo: yes
+  lineinfile:
+    dest: /etc/default/tomcat8
+    state: present
+    regexp: '^CATALINA_OPTS=.*$'
+    line: 'CATALINA_OPTS="{{ tomcat_ubuntu_catalina_opts }}"'
+    insertafter: '^JAVA_OPTS=.*$'
+  notify:
+    - restart tomcat
+  when: tomcat_ubuntu_catalina_opts|bool
 
 - name: Download MySQL JBDC Driver
   sudo: yes
