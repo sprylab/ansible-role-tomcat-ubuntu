@@ -57,7 +57,14 @@
   template:
     src: ../templates/server.j2
     dest: /var/lib/tomcat8/conf/server.xml
-    force: yes
+  notify:
+    - restart tomcat
+
+- name: Update Tomcat's tomcat-users.xml
+  sudo: yes
+  template:
+    src: ../templates/tomcat-users.j2
+    dest: /var/lib/tomcat8/conf/tomcat-users.xml
   notify:
     - restart tomcat
 
