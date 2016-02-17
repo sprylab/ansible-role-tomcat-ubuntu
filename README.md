@@ -5,11 +5,13 @@ Installs the very latest Apache Tomcat (currently 8.0.30) on Ubuntu 14.04 LTS an
 
 Additionally, this role provides support for easily:
 
-* setting _JAVA_OPTS_ for Tomcat
+* setting _JAVA_OPTS_ and _CATALINA_OPTS_ for Tomcat
+* installing Tomcat admin web applications and tools to create user instances
 * installing the Tomcat Native Library
 * installing MySQL and/or PostreSQL JBDC drivers
 * defining _GlobalNamingResources_
 * defining _jvmRoute_
+* definining _tomcat-users.xml_
 
 Installation
 ------------
@@ -28,7 +30,7 @@ You have to make sure Java 7 or up is installed before executing this role on a 
 Role Variables
 --------------
 
-* ``tomcat_ubuntu_version``: Tomcat version to install (string, default: ``8.0.30-1_all``)
+* ``tomcat_ubuntu_version``: Tomcat version to install (string, default: ``8.0.32-1_all``)
 * ``tomcat_ubuntu_java_opts``: _JAVA_OPTS_ used for starting Tomcat (string, default: ``-Djava.awt.headless=true -Xmx2048m -XX:+UseConcMarkSweepGC``)
 * ``tomcat_ubuntu_catalina_opts``: _CATALINA_OPTS_ used for starting Tomcat (string, default: empty)
 * ``tomcat_ubuntu_users``: List of users defined in Tomcat's ``tomcat-users.xml`` (list of ``{ name: <name>, password: <password>, roles: <comma-separated roles> }`` elements, default: [])
