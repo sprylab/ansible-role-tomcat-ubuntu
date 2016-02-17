@@ -38,10 +38,36 @@
     - http://de.archive.ubuntu.com/ubuntu/pool/main/a/apr/libapr1_{{ tomcat_ubuntu_apache_native_version }}.deb
   when: tomcat_ubuntu_native_install|bool
 
-# TODO: This should be replaced by the "apt" module with "deb" parameter after updating to Ansible 1.6+
-- name: Install Tomcat packages via dpkg
+- name: Install Tomcat packages
   sudo: yes
-  shell: dpkg -i --skip-same-version {{ tomcat_ubuntu_download_dir }}/*.deb
+  apt:
+    deb: "{{ tomcat_ubuntu_download_dir }}/{{ item }}"
+  with_items:
+    - libecj-java_3.10.1-2_all.deb
+    - libtomcat8-java_{{ tomcat_ubuntu_version }}.deb
+    - tomcat8-common_{{ tomcat_ubuntu_version }}.deb
+    - tomcat8_{{ tomcat_ubuntu_version }}.deb
+
+- name: Install Tomcat Admin package
+  sudo: yes
+  apt:
+    deb: "{{ tomcat_ubuntu_download_dir }}/tomcat8-admin_{{ tomcat_ubuntu_version }}.deb"
+  when: tomcat_ubuntu_admin_install|bool
+
+- name: Install Tomcat User package
+  sudo: yes
+  apt:
+    deb: "{{ tomcat_ubuntu_download_dir }}/tomcat8-user_{{ tomcat_ubuntu_version }}.deb"
+  when: tomcat_ubuntu_user_install|bool
+
+- name: Install Tomcat Native Library packages
+  sudo: yes
+  apt:
+    deb: "{{ tomcat_ubuntu_download_dir }}/{{ item }}"
+  with_items:
+    - libapr1_{{ tomcat_ubuntu_apache_native_version }}.deb
+    - libtcnative-1_{{ tomcat_ubuntu_native_version }}.deb
+  when: tomcat_ubuntu_native_install|bool
 
 # see https://bugs.launchpad.net/ubuntu/+source/tomcat-native/+bug/1326255 for details
 - name: Fix Tomcat Native Library Ubuntu packaging bug
