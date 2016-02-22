@@ -1,7 +1,7 @@
 ---
 # defaults file for tomcat-ubuntu
 
-tomcat_ubuntu_version: 8.0.32-1_all
+tomcat_ubuntu_version: 8.0.32-1ubuntu1_all
 tomcat_ubuntu_java_opts: -Djava.awt.headless=true -Xmx2048m -XX:+UseConcMarkSweepGC
 tomcat_ubuntu_catalina_opts:
 tomcat_ubuntu_users: []

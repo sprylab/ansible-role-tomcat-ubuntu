@@ -78,6 +78,14 @@
     state: link
   when: tomcat_ubuntu_native_install|bool
 
+- name: Enable Tomcat system user to re-deploy to root context (/)
+  sudo: yes
+  file:
+    path: /var/lib/tomcat8/webapps/ROOT
+    state: directory
+    owner: tomcat8
+    group: tomcat8
+
 - name: Update Tomcat's server.xml
   sudo: yes
   template:
@@ -114,7 +122,7 @@
     insertafter: '^JAVA_OPTS=.*$'
   notify:
     - restart tomcat
-  when: tomcat_ubuntu_catalina_opts|bool
+  when: tomcat_ubuntu_catalina_opts is defined
 
 - name: Download MySQL JBDC Driver
   sudo: yes
