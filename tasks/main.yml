@@ -12,14 +12,14 @@
     url: "{{ item }}"
     dest: "{{ tomcat_ubuntu_download_dir }}"
   with_items:
-    - http://de.archive.ubuntu.com/ubuntu/pool/universe/t/tomcat8/tomcat8_{{ tomcat_ubuntu_version }}.deb
-    - http://de.archive.ubuntu.com/ubuntu/pool/universe/t/tomcat8/tomcat8-common_{{ tomcat_ubuntu_version }}.deb
-    - http://de.archive.ubuntu.com/ubuntu/pool/universe/t/tomcat8/libtomcat8-java_{{ tomcat_ubuntu_version }}.deb
+    - http://de.archive.ubuntu.com/ubuntu/pool/main/t/tomcat8/tomcat8_{{ tomcat_ubuntu_version }}.deb
+    - http://de.archive.ubuntu.com/ubuntu/pool/main/t/tomcat8/tomcat8-common_{{ tomcat_ubuntu_version }}.deb
+    - http://de.archive.ubuntu.com/ubuntu/pool/main/t/tomcat8/libtomcat8-java_{{ tomcat_ubuntu_version }}.deb
     - http://de.archive.ubuntu.com/ubuntu/pool/main/e/ecj/libecj-java_3.10.1-2_all.deb
 
 - name: Download Tomcat Admin from Ubuntu Package archive
   get_url:
-    url: http://de.archive.ubuntu.com/ubuntu/pool/universe/t/tomcat8/tomcat8-admin_{{ tomcat_ubuntu_version }}.deb
+    url: http://de.archive.ubuntu.com/ubuntu/pool/main/t/tomcat8/tomcat8-admin_{{ tomcat_ubuntu_version }}.deb
     dest: "{{ tomcat_ubuntu_download_dir }}"
   when: tomcat_ubuntu_admin_install|bool
 
