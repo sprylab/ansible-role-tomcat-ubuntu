@@ -15,7 +15,8 @@
     - http://de.archive.ubuntu.com/ubuntu/pool/main/t/tomcat8/tomcat8_{{ tomcat_ubuntu_version }}.deb
     - http://de.archive.ubuntu.com/ubuntu/pool/main/t/tomcat8/tomcat8-common_{{ tomcat_ubuntu_version }}.deb
     - http://de.archive.ubuntu.com/ubuntu/pool/main/t/tomcat8/libtomcat8-java_{{ tomcat_ubuntu_version }}.deb
-    - http://de.archive.ubuntu.com/ubuntu/pool/main/e/ecj/libecj-java_3.10.1-2_all.deb
+    - http://de.archive.ubuntu.com/ubuntu/pool/main/e/ecj/libecj-java_{{ tomcat_ubuntu_libecj_version }}.deb
+    - http://de.archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.0.0_{{ tomcat_ubuntu_libssl_version }}.deb
 
 - name: Download Tomcat Admin from Ubuntu Package archive
   get_url:
@@ -43,7 +44,8 @@
   apt:
     deb: "{{ tomcat_ubuntu_download_dir }}/{{ item.1 }}"
   with_indexed_items:
-    - libecj-java_3.10.1-2_all.deb
+    - libssl1.0.0_{{ tomcat_ubuntu_libssl_version }}.deb
+    - libecj-java_{{ tomcat_ubuntu_libecj_version }}.deb
     - libtomcat8-java_{{ tomcat_ubuntu_version }}.deb
     - tomcat8-common_{{ tomcat_ubuntu_version }}.deb
     - tomcat8_{{ tomcat_ubuntu_version }}.deb
@@ -111,6 +113,8 @@
     line: 'JAVA_OPTS="{{ tomcat_ubuntu_java_opts }}"'
   notify:
     - restart tomcat
+  tags:
+    - jvm-options
 
 - name: Set Tomcat's CATALINA_OPTS
   sudo: yes
@@ -123,6 +127,8 @@
   notify:
     - restart tomcat
   when: tomcat_ubuntu_catalina_opts is defined
+  tags:
+    - jvm-options
 
 - name: Download MySQL JBDC Driver
   sudo: yes
@@ -132,9 +138,8 @@
 
 - name: Enable MySQL JBDC Driver
   sudo: yes
-  sudo_user: tomcat8
   file:
-      path: /var/lib/tomcat8/lib/mysql-connector-java.jar
+      path: /usr/share/tomcat8/lib/mysql-connector-java.jar
       src: /usr/share/java/mysql-connector-java.jar
       state: link
   when: tomcat_ubuntu_mysql_jbdc_install
@@ -143,10 +148,18 @@
 
 - name: Download PostgreSQL JBDC Driver
   sudo: yes
-  sudo_user: tomcat8
   get_url:
     url: http://search.maven.org/remotecontent?filepath=org/postgresql/postgresql/{{ tomcat_ubuntu_postgresql_jdbc_version }}/postgresql-{{ tomcat_ubuntu_postgresql_jdbc_version }}.jar
-    dest: /var/lib/tomcat8/lib/
+    dest: /usr/share/tomcat8/lib/
   when: tomcat_ubuntu_postgresql_jbdc_install
   notify:
     - restart tomcat
+
+- name: Create additional Tomcat user instance(s)
+  include: user-instance.yml
+  vars:
+    - user_instance: "{{ item }}"
+  with_items: "{{ tomcat_ubuntu_user_instances }}"
+  when: tomcat_ubuntu_user_install|bool and tomcat_ubuntu_user_instances is defined
+  tags:
+    - user-instances

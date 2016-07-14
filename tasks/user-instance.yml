@@ -1,0 +1,89 @@
+- name: Create Tomcat user instance {{ user_instance.name }} via tomcat8-instance-create
+  become: yes
+  shell: tomcat8-instance-create -p {{ user_instance.port }} -c {{ user_instance.control_port }} {{ user_instance.parent_directory }}/{{ user_instance.name }}
+  args:
+    creates: "{{ user_instance.parent_directory }}/{{ user_instance.name }}"
+
+- name: Set owner and permissions for Tomcat user instance {{ user_instance.name }} to tomcat8
+  become: yes
+  file:
+    path: "{{ user_instance.parent_directory }}/{{ user_instance.name }}"
+    state: directory
+    owner: tomcat8
+    group: tomcat8
+    recurse: yes
+
+- name: Create virtual host directory for Tomcat user instance {{ user_instance.name }}
+  become: yes
+  become_user: tomcat8
+  file:
+    path: "{{ user_instance.parent_directory }}/{{ user_instance.name }}/conf/Catalina/localhost"
+    state: directory
+
+- name: Enable manager for Tomcat user instance {{ user_instance.name }}
+  become: yes
+  become_user: tomcat8
+  shell: cp /etc/tomcat8/Catalina/localhost/*.xml {{ user_instance.parent_directory }}/{{ user_instance.name }}/conf/Catalina/localhost/
+  when: tomcat_ubuntu_admin_install|bool and user_instance.admin_install|bool
+
+- name: Copy global tomcat-users.xml to Tomcat user instance {{ user_instance.name }}
+  become: yes
+  become_user: tomcat8
+  copy:
+    src: /var/lib/tomcat8/conf/tomcat-users.xml
+    remote_src: yes
+    dest: "{{ user_instance.parent_directory }}/{{ user_instance.name }}/conf"
+
+- name: Copy global policy.d to Tomcat user instance {{ user_instance.name }}
+  become: yes
+  become_user: tomcat8
+  shell: cp -R /var/lib/tomcat8/conf/policy.d {{ user_instance.parent_directory }}/{{ user_instance.name }}/conf
+  args:
+    creates: "{{ user_instance.parent_directory }}/{{ user_instance.name }}/conf/policy.d"
+
+- name: Update server.xml for Tomcat user instance {{ user_instance.name }}
+  become: yes
+  become_user: tomcat8
+  blockinfile:
+      dest: "{{ user_instance.parent_directory }}/{{ user_instance.name }}/conf/server.xml"
+      block: |
+        {{ user_instance.global_naming_resources }}
+      insertbefore: ".*</GlobalNamingResources>.*"
+      marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+
+- name: Create /etc/default/{{ user_instance.name }} for Tomcat user instance {{ user_instance.name }}
+  become: yes
+  blockinfile:
+      dest: "/etc/default/{{ user_instance.name }}"
+      block: |
+        JAVA_OPTS="{{ user_instance.java_opts | join(' ')}}"
+        CATALINA_OPTS="{{ user_instance.catalina_opts | join(' ')}}"
+      create: yes
+
+- name: Make setenv.sh read values from /etc/default/{{ user_instance.name }} for Tomcat user instance {{ user_instance.name }}
+  become: yes
+  become_user: tomcat8
+  blockinfile:
+      dest: "{{ user_instance.parent_directory }}/{{ user_instance.name }}/bin/setenv.sh"
+      block: |
+        DEFAULT=/etc/default/{{ user_instance.name }}
+        # overwrite settings from default file
+        if [ -f "$DEFAULT" ]; then
+        	. "$DEFAULT"
+        fi
+      create: yes
+
+- name: Create init script for Tomcat user instance {{ user_instance.name }}
+  become: yes
+  template:
+    src: init.j2
+    dest: /etc/init.d/{{ user_instance.name }}
+    mode: 0755
+
+- name: (Re-)Start Tomcat user instance {{ user_instance.name }}
+  become: yes
+  service:
+    name: "{{ user_instance.name }}"
+    state: restarted
+    enabled: yes
+  when: user_instance.auto_start|bool
