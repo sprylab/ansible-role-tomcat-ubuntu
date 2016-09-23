@@ -11,8 +11,9 @@ galaxy_info:
     - trusty
     - utopic
     - vivid
-  categories:
+  galaxy_tags:
   - development
+  - java
   - system
   - web
 dependencies: []
