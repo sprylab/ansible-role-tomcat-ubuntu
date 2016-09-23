@@ -32,7 +32,7 @@ You have to make sure Java 7 or up is installed before executing this role on a 
 Role Variables
 --------------
 
-* `tomcat_ubuntu_version`: Tomcat version to install (string, default: `8.0.36-1_all`)
+* `tomcat_ubuntu_version`: Tomcat version to install (string, default: `8.0.36-2ubuntu1_all`)
 * `tomcat_ubuntu_repository`: URL (without trailing slash) pointing to Ubuntu repository to install from (string, default: `http://de.archive.ubuntu.com/ubuntu`)
 * `tomcat_ubuntu_port`: Port for Tomcat's HTTP connector (integer, default: `8080`)
 * `tomcat_ubuntu_control_port`: Port for controlling Tomcat via HTTP, e.g. _shutdown_ (integer, default: `8005`)
@@ -107,7 +107,7 @@ To try it out follow these steps:
     `vagrant box add ubuntu/trusty64`
 * Initialize the VM:
     `vagrant up`
- * When finished, check that Tomcat is running by looking up `http://localhost:8080/` in your Browser
+ * When finished, check that Tomcat is running by looking up `http://localhost:8080/` in your web browser
  (Vagrant is configured to forward the port 8080 from the VM to your host).
  * Connect to the VM via SSH to check further details:
     `vagrant ssh`

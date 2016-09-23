@@ -1,7 +1,7 @@
 ---
 # defaults file for tomcat-ubuntu
 
-tomcat_ubuntu_version: 8.0.36-1_all
+tomcat_ubuntu_version: 8.0.36-2ubuntu1_all
 tomcat_ubuntu_repository: http://de.archive.ubuntu.com/ubuntu
 tomcat_ubuntu_port: 8080
 tomcat_ubuntu_control_port: 8005
@@ -16,8 +16,8 @@ tomcat_ubuntu_user_install: no
 tomcat_ubuntu_native_install: yes
 tomcat_ubuntu_native_version: 1.2.8-1_amd64
 tomcat_ubuntu_apache_native_version: 1.5.2-4_amd64
-tomcat_ubuntu_libecj_version: 3.11.0-1ubuntu2_all
-tomcat_ubuntu_libssl_version: 1.0.2g-1ubuntu5_amd64
+tomcat_ubuntu_libecj_version: 3.11.0-6_all
+tomcat_ubuntu_libssl_version: 1.0.2g-1ubuntu8_amd64
 tomcat_ubuntu_mysql_jbdc_install: no
 tomcat_ubuntu_postgresql_jbdc_install: no
 tomcat_ubuntu_postgresql_jdbc_version: 9.4.1208
