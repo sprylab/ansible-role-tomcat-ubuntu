@@ -33,6 +33,7 @@ Role Variables
 --------------
 
 * `tomcat_ubuntu_version`: Tomcat version to install (string, default: `8.0.36-1_all`)
+* `tomcat_ubuntu_repository`: URL (without trailing slash) pointing to Ubuntu repository to install from (string, default: `http://de.archive.ubuntu.com/ubuntu`)
 * `tomcat_ubuntu_port`: Port for Tomcat's HTTP connector (integer, default: `8080`)
 * `tomcat_ubuntu_control_port`: Port for controlling Tomcat via HTTP, e.g. _shutdown_ (integer, default: `8005`)
 * `tomcat_ubuntu_java_opts`: _JAVA_OPTS_ used for starting Tomcat (string, default: `-Djava.awt.headless=true -Xmx2048m -XX:+UseConcMarkSweepGC`)
